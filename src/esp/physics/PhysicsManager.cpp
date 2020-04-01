@@ -16,7 +16,7 @@ bool PhysicsManager::initPhysics(
   physicsNode_ = node;
 
   // Copy over relevant configuration
-  fixedTimeStep_ = physicsManagerAttributes.getDouble("timestep");
+  fixedTimeStep_ = physicsManagerAttributes.getTimestep();
 
   //! Create new scene node
   staticSceneObject_ =
@@ -77,9 +77,9 @@ int PhysicsManager::addObject(const int objectLibIndex,
   if (physicsObjectAttributes.existsAs(assets::DataType::BOOL,
                                        "COM_provided")) {
     // if the COM is provided, shift by that
-    Magnum::Vector3 comShift = -physicsObjectAttributes.getMagnumVec3("COM");
+    Magnum::Vector3 comShift = -physicsObjectAttributes.getCOM();
     // first apply scale
-    comShift = physicsObjectAttributes.getMagnumVec3("scale") * comShift;
+    comShift = physicsObjectAttributes.getScale() * comShift;
     existingObjects_.at(nextObjectID_)->shiftOrigin(comShift);
   } else {
     // otherwise use the bounding box center
@@ -93,7 +93,7 @@ int PhysicsManager::addObject(const std::string& configFile,
                               DrawableGroup* drawables,
                               scene::SceneNode* attachmentNode,
                               const Magnum::ResourceKey& lightSetup) {
-  int resObjectID = resourceManager_->getObjectID(configFile);
+  int resObjectID = resourceManager_->getObjectTemplateID(configFile);
   //! Invoke resourceManager to draw object
   int physObjectID =
       addObject(resObjectID, drawables, attachmentNode, lightSetup);
